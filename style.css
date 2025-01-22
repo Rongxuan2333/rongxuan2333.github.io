@@ -1,0 +1,207 @@
+/* CSS for rongxuan2333.github.io */
+
+@font-face {
+  font-family: 'MiSans-Regular';
+  src: url(fonts/MiSans-Regular.ttf) format('truetype');
+}
+
+@font-face {
+  font-family: 'MiSans-Semibold';
+  src: url(fonts/MiSans-Semibold.ttf) format('truetype');
+}
+
+h1, h2, h3, h4, h5, h6, b, strong {
+  font-family: 'MiSans-Semibold';
+}
+
+body {
+  background-color: #f2f2f2;
+  font-family: 'MiSans-Regular';
+  font-size: 16px;
+  background-color: navajowhite;
+  margin: 0 10px;
+}
+
+main {
+  margin-top: 45px;
+  max-width: 550px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+footer {
+  text-align: center;
+  color: gray;
+}
+
+a, a:visited {
+  color: #756c17;
+  text-decoration: none;
+}
+
+a:hover, a:active {
+  color: #857a1c;
+  text-decoration: none;
+}
+
+@media (max-width: 450px) {
+  body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+  }
+
+  main {
+    margin-top: 50px;
+    max-width: 550px;
+  }
+}
+
+.first {
+  margin: auto auto;
+  max-width: 400px;
+}
+
+.owner {
+  display: flex;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  color: dimgrey;
+}
+
+.intro {
+  flex: 1;
+  margin-right: 30px;
+}
+
+.qqava {
+  border-radius: 50%;
+  margin: 20px 10px;
+}
+
+.centerpst {
+  text-align: center;
+}
+
+.centerpst .button {
+  color: white;
+  text-decoration: none;
+}
+
+.centerpst .button:hover {
+  color: white;
+}
+
+.button {
+  display: inline-block;
+  padding: 10px 20px;
+  background-color:rgb(222, 184, 135);
+  color: #fff;
+  text-decoration: none;
+  border-radius: 5px;
+  text-align: center;
+  font-size: 16px;
+  font-weight: bold;
+  transition: background-color 0.3s;
+  margin: 5px;
+}
+
+.button:hover {
+  background-color:rgb(228, 191, 142);
+}
+
+.cardstyle1 {
+  background-color: rgba(255, 255, 255, 0.7);
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  max-width: 320px;
+  margin: 10px auto;
+  padding: 15px;
+  transition: transform 0.5s;
+  p {
+    font-size: 14px;
+  }
+}
+
+.cardstyle1:hover {
+  transform: scale(1.02);
+}
+
+.block-divs {
+  background-color: rgba(182, 211, 255, 0.7);
+  transition: transform 0.5s;
+  border-radius: 10px;
+  padding: 15px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  max-width: 320px;
+  margin: 10px auto;
+  h3 {
+    text-align: center;
+    color:rgb(42, 69, 91)
+  }
+}
+
+.block-divs:hover {
+  transform: scale(1.02);
+}
+
+header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  top: 5px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(255, 255, 255, 0.8);
+  text-align: center;
+  padding: 10px 15px;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  transition: top 0.3s ease;
+  z-index: 1000;
+}
+
+header h1 {
+  color: rgb(153, 142, 222);
+  font-size: 16px;
+  margin: 0;
+}
+
+.docker-prt {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.docker {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  width: 100%;
+  background-color: rgba(255, 255, 255, 0.8);
+  color: white;
+  text-align: center;
+  height: 40px;
+  padding: 10px 0;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  transition: bottom 0.3s ease;
+  z-index: 1000;
+  bottom: 0;
+}
+
+.docker a {
+  transition: transform 0.5s;
+  color: white;
+  text-decoration: none;
+  margin: 0 10px;
+}
+
+.docker a:hover {
+  transform: scale(1.1);
+  border-radius: 5px;
+}
+/* 结束 */
+
