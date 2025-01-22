@@ -19,11 +19,10 @@ body {
   font-family: 'MiSans-Regular';
   font-size: 16px;
   background-color: navajowhite;
-  margin: 0 10px;
+  margin: 60px 10px;
 }
 
 main {
-  margin-top: 45px;
   max-width: 550px;
   margin-left: auto;
   margin-right: auto;
@@ -44,40 +43,20 @@ a:hover, a:active {
   text-decoration: none;
 }
 
-@media (max-width: 450px) {
-  body {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-  }
-
-  main {
-    margin-top: 50px;
-    max-width: 550px;
-  }
-}
-
 .first {
   margin: auto auto;
   max-width: 400px;
 }
 
 .owner {
-  display: flex;
-  align-items: flex-start;
-  flex-wrap: wrap;
+  text-align: center;
   color: dimgrey;
-}
-
-.intro {
-  flex: 1;
-  margin-right: 30px;
+  margin: auto;
 }
 
 .qqava {
   border-radius: 50%;
-  margin: 20px 10px;
+  margin: auto;
 }
 
 .centerpst {
@@ -161,6 +140,7 @@ header {
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
   transition: top 0.3s ease;
   z-index: 1000;
+  min-width: 200px;
 }
 
 header h1 {
@@ -181,7 +161,7 @@ header h1 {
   justify-content: center;
   position: fixed;
   width: 100%;
-  background-color: rgba(255, 255, 255, 0.8);
+  background-color: rgb(255, 255, 255);
   color: white;
   text-align: center;
   height: 40px;
