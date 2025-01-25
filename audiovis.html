@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spherical Audio Visualizer</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #1a1a1a;
+            margin: 0;
+            color: #fff;
+            font-family: 'Arial', sans-serif;
+        }
+        h1 {
+            margin-bottom: 20px;
+            font-size: 2.5rem;
+            color: #ff6f61;
+        }
+        input[type="file"] {
+            margin-bottom: 20px;
+            padding: 10px;
+            border: 2px solid #ff6f61;
+            border-radius: 5px;
+            background-color: #333;
+            color: #fff;
+            cursor: pointer;
+        }
+        canvas {
+            border: 2px solid #ff6f61;
+            border-radius: 10px;
+            background-color: #000;
+            margin-top: 20px;
+        }
+        audio {
+            margin-top: 20px;
+            width: 80%;
+            max-width: 400px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Spherical Audio Visualizer</h1>
+    <input type="file" id="audioFile" accept="audio/*" />
+    <canvas id="visualizer" width="800" height="600"></canvas>
+    <audio id="audio" controls></audio>
+    <script>
+        const audioFileInput = document.getElementById('audioFile');
+        const audio = document.getElementById('audio');
+        const canvas = document.getElementById('visualizer');
+        const ctx = canvas.getContext('2d');
+        let audioContext, analyser, source;
+        let animationFrameId;
+
+        audioFileInput.addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const fileURL = URL.createObjectURL(file);
+                audio.src = fileURL;
+                if (!audioContext) {
+                    audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                    analyser = audioContext.createAnalyser();
+                    source = audioContext.createMediaElementSource(audio);
+                    source.connect(analyser);
+                    analyser.connect(audioContext.destination);
+                    analyser.fftSize = 256;
+                }
+                audio.play();
+            }
+        });
+
+        const bufferLength = analyser ? analyser.frequencyBinCount : 128;
+        const dataArray = new Uint8Array(bufferLength);
+
+        let previousAmplitudes = new Array(bufferLength).fill(0);
+        const smoothingFactor = 0.1;
+        const neighborhoodSize = 3;
+        const neighborhoodWeight = 0.5;
+        const amplitudeScale = 30;
+        const baseRadius = 180;
+        const pulseRadiusAmplitude = 10;
+        const lineWidth = 2;
+        const curveSmoothness = 0;
+        const saturationValue = '100%';
+        const lightnessStart = '50%';
+        const lightnessMid = '60%';
+        const lightnessEnd = '70%';
+        const opacityBase = 0.7;
+        const opacityAmplitudeFactor = 0.3;
+        const midColorOffset = 60;
+        const endColorOffset = 120;
+        const bassBoostFactor = 2.0; // 低音增强系数 - 可调整 (Bass boost factor - adjustable)
+
+
+        function drawSphere() {
+            animationFrameId = requestAnimationFrame(drawSphere);
+            if (!analyser) return;
+
+            analyser.getByteFrequencyData(dataArray);
+            ctx.fillStyle = '#1a1a1a';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            const centerX = canvas.width / 2;
+            const centerY = canvas.height / 2;
+            let radius = baseRadius;
+            const bars = bufferLength;
+
+            const avgAmplitude = dataArray.reduce((sum, val) => sum + val, 0) / dataArray.length;
+            const pulseAmplitude = avgAmplitude / 255;
+            radius += pulseAmplitude * pulseRadiusAmplitude;
+
+            const points = [];
+
+            for (let i = 0; i < bars; i++) {
+                let amplitude = dataArray[i] / 255;
+                let weightedAmplitude = amplitude;
+                let weightSum = 1;
+
+                for (let j = 1; j < neighborhoodSize; j++) {
+                    const prevIndex = (i - j + bars) % bars;
+                    const nextIndex = (i + j) % bars;
+
+                    const neighborAmplitudePrev = dataArray[prevIndex] / 255;
+                    const neighborAmplitudeNext = dataArray[nextIndex] / 255;
+
+                    const neighborWeightFactor = Math.pow(neighborhoodWeight, j);
+
+                    weightedAmplitude += neighborAmplitudePrev * neighborWeightFactor;
+                    weightedAmplitude += neighborAmplitudeNext * neighborWeightFactor;
+                    weightSum += 2 * neighborWeightFactor;
+                }
+                amplitude = weightedAmplitude / weightSum;
+
+                amplitude = amplitude * (1 - smoothingFactor) + previousAmplitudes[i] * smoothingFactor;
+                previousAmplitudes[i] = amplitude;
+
+                // 低音增强 -  对较低频率的振幅进行放大 (Bass boost - amplify amplitude for lower frequencies)
+                const bassWeight = 1 + (bassBoostFactor - 1) * (1 - (i / bars)); // 权重从低频到高频递减 (Weight decreases from low to high frequency)
+                amplitude *= bassWeight;
+
+
+                const angle = (i / bars) * Math.PI * 2;
+                const x = centerX + Math.cos(angle) * (radius + amplitude * amplitudeScale);
+                const y = centerY + Math.sin(angle) * (radius + amplitude * amplitudeScale);
+                points.push({ x, y });
+            }
+
+            // 绘制圆滑的线条 (Draw smooth lines)
+            ctx.lineWidth = lineWidth;
+            ctx.lineJoin = 'round';
+            ctx.beginPath();
+
+            for (let i = 0; i < points.length; i++) {
+                const current = points[i];
+                const next = points[(i + 1) % points.length];
+                const prev = points[(i - 1 + points.length) % points.length];
+
+                const controlX1 = current.x + (prev.x - current.x) * curveSmoothness;
+                const controlY1 = current.y + (prev.y - current.y) * curveSmoothness;
+                const controlX2 = next.x - (next.x - current.x) * curveSmoothness;
+                const controlY2 = next.y - (next.y - current.y) * curveSmoothness;
+
+                if (i === 0) {
+                    ctx.moveTo(current.x, current.y);
+                }
+
+                ctx.bezierCurveTo(
+                    controlX1, controlY1,
+                    controlX2, controlY2,
+                    next.x, next.y
+                );
+            }
+            ctx.closePath();
+
+            // 更多种渐变色线条 (More varied gradient colors for lines)
+            for (let i = 0; i < points.length; i++) {
+                const nextIndex = (i + 1) % points.length;
+                const startPoint = points[i];
+                const endPoint = points[nextIndex];
+
+                const gradient = ctx.createLinearGradient(startPoint.x, startPoint.y, endPoint.x, endPoint.y);
+                const startHue = (i / bars) * 360;
+                const endHue = ((i + 1) / bars) * 360;
+                const amplitude = dataArray[i] / 255;
+
+                gradient.addColorStop(0, `hsla(${startHue}, ${saturationValue}, ${lightnessStart}, ${opacityBase + amplitude * opacityAmplitudeFactor})`);
+                gradient.addColorStop(0.5, `hsla(${startHue + midColorOffset}, ${saturationValue}, ${lightnessMid}, ${opacityBase + amplitude * opacityAmplitudeFactor * 0.8})`);
+                gradient.addColorStop(1, `hsla(${endHue + endColorOffset}, ${saturationValue}, ${lightnessEnd}, ${opacityBase + dataArray[nextIndex]/255 * opacityAmplitudeFactor * 0.6})`);
+
+                ctx.strokeStyle = gradient;
+                ctx.stroke();
+            }
+        }
+
+        audio.addEventListener('play', () => {
+            if (audioContext && audioContext.state === 'suspended') {
+                audioContext.resume();
+            }
+            drawSphere();
+        });
+
+        audio.addEventListener('pause', () => {
+            cancelAnimationFrame(animationFrameId);
+        });
+
+        audio.addEventListener('ended', () => {
+            cancelAnimationFrame(animationFrameId);
+        });
+    </script>
+</body>
+</html>
