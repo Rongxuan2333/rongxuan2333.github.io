@@ -1,0 +1,79 @@
+body {
+	font: 16px Arial, sans-serif;
+	background-color: navajowhite;
+	margin: 60px 10px;
+	color: dimgrey;
+}
+header {
+	position: fixed;
+	top: 5px;
+	left: 50%;
+	transform: translateX(-50%);
+	background-color: rgba(255, 255, 255, 0.8);
+	padding: 10px 15px;
+	border-radius: 10px;
+	box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+	z-index: 10;
+	width: 200px;
+	color: rgb(153, 142, 222);
+}
+header > h1 {
+	text-align: center;
+	font-size: 16px;
+	margin: 0;
+}
+.profile {
+	margin: auto;
+	max-width: 400px;
+	text-align: center;
+}
+.face {
+	border-radius: 50%;
+	width: 200px;
+}
+.button {
+	display: inline-block;
+	padding: 10px 20px;
+	background-color: rgb(222, 184, 135);
+	color: #fff;
+	text-decoration: none;
+	border-radius: 5px;
+	text-align: center;
+	font-size: 16px;
+	font-weight: bold;
+	transition: background-color 0.3s;
+	margin: 5px;
+}
+.button:hover, .button:visited, .button:active {
+	color: #fff;
+	background-color:rgb(228, 191, 142);
+}
+.card {
+	border-radius: 10px;
+	box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+	max-width: 320px;
+	margin: 10px auto;
+	padding: 15px;
+	transition: transform 0.5s;
+}
+.card-white {
+	background-color: rgba(255, 255, 255, 0.7);
+}
+.card-blue {
+	background-color: rgb(218, 233, 255);
+}
+.card > p {
+	font-size: 14px;
+}
+.card:hover {
+	transform: scale(1.02);
+}
+a {
+	text-decoration: none;
+}
+a, a:visited {
+	color: #756c17;
+}
+a:hover, a:active {
+	color: #857a1c;
+}
